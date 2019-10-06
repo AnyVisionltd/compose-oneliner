@@ -1,0 +1,15 @@
+- name: update sysctl net.ipv4.neigh.default.gc_thresh1
+  sysctl:
+    name: net.ipv4.neigh.default.gc_thresh1
+    value: 4096
+    state: present
+- name: update sysctl net.ipv4.neigh.default.gc_thresh2
+  sysctl:
+    name: net.ipv4.neigh.default.gc_thresh2
+    value: 8192
+    state: present
+- name: update sysctl net.ipv4.neigh.default.gc_thresh3
+  sysctl:
+    name: net.ipv4.neigh.default.gc_thresh3
+    value: 16384
+    state: present
