@@ -30,13 +30,14 @@ function download-dashboard {
     echo "Saved to: ${HOME_DIR}/AnyVision-${ver}-linux-x86_64.AppImage"
 }
 
-BRANCH=$1
-TOKEN=$2
-PRODUCT=$3
-COMPOSE_REPO_GIT="${4:-docker-compose}.git"
-DASHBOARD=${5:-false}
-DOWNLOAD_ONLY=${6:-false}
-DASHBOARD_VERSION=$7
+BRANCH="${1}"
+TOKEN="${2}"
+PRODUCT="$3"
+COMPOSE_REPO_GIT="${4}.git"
+DASHBOARD="${5}"
+DOWNLOAD_ONLY="${6}"
+DASHBOARD_VERSION="${7}"
+
 if [[ $TOKEN != "" ]] && [[ $TOKEN == *".json" ]] && [[ -f $TOKEN ]] ;then
     gcr_user="_json_key" 
     gcr_key="$(cat ${TOKEN} | tr '\n' ' ')"
@@ -92,6 +93,7 @@ if [ $? != 0 ]; then
     echo "Installation failed, please contact support." 
     exit 1
 fi
+
 ## Fix nvidia-driver bug on Ubuntu 18.04 black screen on login: https://devtalk.nvidia.com/default/topic/1048019/linux/black-screen-after-install-cuda-10-1-on-ubuntu-18-04/post/5321320/#5321320
 sed -i -r -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?quiet ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?splash ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' /etc/default/grub
 update-grub

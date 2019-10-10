@@ -52,10 +52,6 @@ do
             GIT="${args[((i+1))]}"
         ;;
 
-        "-d"|"--debug")
-            EXEC='bash -x'
-        ;;
-
         "--download-dashboard")
             DASHBOARD="true"
         ;;
@@ -73,6 +69,10 @@ do
         "--download-only")
             DOWNLOAD_ONLY="true"
         ;;
+        
+        "-d"|"--debug")
+            EXEC='bash -x'
+        ;;
 
         "-h"|"--help"|"help")
             show_help
@@ -84,7 +84,7 @@ do
     ((i++))
 done
 
-
+${DOWNLOAD_ONLY} ${DASHBOARD_VERSION}
 if [[ -z ${BRANCH} ]] ; then
     echo "Branch must be specified!"
     exit 1
@@ -100,8 +100,17 @@ if [[ -z $PRODUCT ]]; then
     PRODUCT="BT"
 fi
 
-if [[ -z $DASHBOARD  && ! -z $DASHBOARD_VERSION ]]; then
+if [[ -z ${GIT} ]]; then
+    GIT="docker-compose"
+fi
+
+if [[ -z ${DASHBOARD} ]]; then
+    DASHBOARD="false"
+fi
+
+if [[ $DASHBOARD=="false"  && ! -z $DASHBOARD_VERSION ]]; then
     echo "--download-dashboard was not spcify ignoring --dashboard-version"
+    unset DASHBOARD_VERSION
 fi
 
 if [ -x "$(command -v apt-get)" ]; then
