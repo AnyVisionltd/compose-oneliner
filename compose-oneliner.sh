@@ -77,12 +77,21 @@ echo "====================================================================="
 echo "== Making sure that all dependencies are installed, please wait... ==" 
 echo "=====================================================================" 
 ## APT update
+set -e
 apt -qq update 
 apt -qq install -y software-properties-common 
 apt-add-repository --yes --update ppa:ansible/ansible 
 apt -qq install -y ansible 
+set +e
+
 ansible-playbook --become --become-user=root ansible/main.yml -vv
 
+
+if [ $? != 0 ]; then
+    echo "" 
+    echo "Installation failed, please contact support." 
+    exit 1
+fi
 ## Fix nvidia-driver bug on Ubuntu 18.04 black screen on login: https://devtalk.nvidia.com/default/topic/1048019/linux/black-screen-after-install-cuda-10-1-on-ubuntu-18-04/post/5321320/#5321320
 sed -i -r -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?quiet ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?splash ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' /etc/default/grub
 update-grub
