@@ -42,7 +42,7 @@
 - name: update sysctl fs.file-max
   sysctl:
     name: fs.file-max
-    value: 200000
+    value: 2000000
     state: present
 
 # Memsql best practices
