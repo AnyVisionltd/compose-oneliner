@@ -134,59 +134,30 @@
     state: present
 
 
-- name: update nofile hard 1000
+- name: update nofile hard
   pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: hard
     limit_item: nofile
     value: '1000000'
 
-- name: update nofile hard 1000
+- name: update nofile hard
   pam_limits:
-    domain: '@1000'
-    limit_type: hard
-    limit_item: nofile
-    value: '1000000'
-
-- name: update nofile hard 1000
-  pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: soft
     limit_item: nofile
     value: '1000000'
-
-- name: update nofile hard 1000
-  pam_limits:
-    domain: '@1000'
-    limit_type: soft
-    limit_item: nofile
-    value: '1000000'    
-
 
 - name: update nproc soft
   pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: hard
     limit_item: nproc
     value: '128000'
 
 - name: update nproc soft
   pam_limits:
-    domain: '@1000'
-    limit_type: hard
-    limit_item: nproc
-    value: '128000'
-
-- name: update nproc soft
-  pam_limits:
-    domain: '1000'
-    limit_type: soft
-    limit_item: nproc
-    value: '128000'
-
-- name: update nproc soft
-  pam_limits:
-    domain: '@1000'
+    domain: '*'
     limit_type: soft
     limit_item: nproc
     value: '128000'
