@@ -223,7 +223,7 @@ function run_xhost {
         echo "SUDO_USER is blank, cannot retrive this parameter, mayabe running sudo with other profile (-)."
     else 
         echo "SUDO_USER is set to '$SUDO_USER', running xhost + with '$SUDO_USER'"
-        su - ${SUDO_USER} -c "xhost +SI:localuser:root'"
+        su - ${SUDO_USER} -c "xhost +SI:localuser:root"
     fi
 }
 
