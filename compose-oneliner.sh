@@ -19,7 +19,7 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 HOME_DIR=`eval echo ~$(logname)`
 COMPOSE_BASH_URL="https://github.com/AnyVisionltd"
-NVIDID-DRIVER-VERSION="410.104-1"
+NVIDIA_DRIVER_VERSION="410.104-1"
 
 
 function show_help(){
@@ -100,15 +100,16 @@ do
 
         "--nvidia-driver-version")
             if [[ "${args[((i+1))]}" == "410" ]]; then
-                NVIDID-DRIVER-VERSION="410.104-1"
+                NVIDIA_DRIVER_VERSION="410.104-1"
             elif [[ "${args[((i+1))]}" == "418" ]]; then
-                NVIDID-DRIVER-VERSION="418.87.01-1"
+                NVIDIA_DRIVER_VERSION="418.87.01-1"
             elif [[ "${args[((i+1))]}" == "440" ]]; then
-                NVIDID-DRIVER-VERSION="440.33.01-1 "
+                NVIDIA_DRIVER_VERSION="440.33.01-1 "
             else
                 echo "Not a valid driver version, aborting"
                 exit 1
-            ;;
+	        fi
+        ;;
     
         "-h"|"--help"|"help")
             show_help
@@ -225,11 +226,22 @@ git clone --recurse-submodules  https://github.com/AnyVisionltd/compose-oneliner
 pushd /opt/compose-oneliner
 
 
-if ! ansible-playbook --become --become-user=root ansible/main.yml -e nvidia_driver_package_version=${NVIDID-DRIVER-VERSION} -vvv; then
+if ! ansible-playbook --become --become-user=root ansible/main.yml -e nvidia_driver_package_version=${NVIDIA_DRIVER_VERSION} -vvv; then
     echo "" 
     echo "Installation failed, please contact support." 
     exit 1
 fi
+
+
+function run_xhost {
+    if [ -z ${SUDO_USER} ]; then 
+        echo "SUDO_USER is blank, cannot retrive this parameter, mayabe running sudo with other profile (-)."
+    else 
+        echo "SUDO_USER is set to '$SUDO_USER', running xhost + with '$SUDO_USER'"
+        su - ${SUDO_USER} -c "xhost +SI:localuser:root"
+    fi
+}
+
 
 ## Fix nvidia-driver bug on Ubuntu 18.04 black screen on login: https://devtalk.nvidia.com/default/topic/1048019/linux/black-screen-after-install-cuda-10-1-on-ubuntu-18-04/post/5321320/#5321320
 sed -i -r -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?quiet ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="(.*)?splash ?(.*)?"/GRUB_CMDLINE_LINUX_DEFAULT="\1\2"/' /etc/default/grub
@@ -247,6 +259,7 @@ case "${PRODUCT}" in
     ;;
     "insights")
         timedatectl set-timezone Etc/UTC && echo "changed the local machine time to UTC"
+        run_xhost
         docker-compose -f ${DOCKER_COMPOSE_FILE} -f ${DOCKER_COMPOSE_PRODUCT_FILE} up -d
         exit
     ;;
