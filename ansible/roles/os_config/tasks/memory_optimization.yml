@@ -1,30 +1,30 @@
-- name: update nofile soft
+- name: update nofile soft root
   pam_limits:
     domain: root
     limit_type: soft
     limit_item: nofile
-    value: 200000
-
-- name: update nofile hard
-  pam_limits:
-    domain: root
-    limit_type: hard
-    limit_item: nofile
-    value: 200000
-
-- name: update nproc soft
-  pam_limits:
-    domain: root
-    limit_type: soft
-    limit_item: nproc
-    value: 200000
+    value: 1000000
 
 - name: update nofile hard root
   pam_limits:
     domain: root
     limit_type: hard
-    limit_item: nproc
+    limit_item: nofile
     value: 1000000
+
+- name: update nproc soft root
+  pam_limits:
+    domain: root
+    limit_type: soft
+    limit_item: nproc
+    value: 128000
+
+- name: update nproc hard root
+  pam_limits:
+    domain: root
+    limit_type: hard
+    limit_item: nproc
+    value: 128000
 
 
 - name: update sysctl vm.swappiness
@@ -42,7 +42,7 @@
 - name: update sysctl fs.file-max
   sysctl:
     name: fs.file-max
-    value: 200000
+    value: 2000000
     state: present
 
 # Memsql best practices
@@ -134,59 +134,30 @@
     state: present
 
 
-- name: update nofile hard 1000
+- name: update nofile hard
   pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: hard
     limit_item: nofile
     value: '1000000'
 
-- name: update nofile hard 1000
+- name: update nofile hard
   pam_limits:
-    domain: '@1000'
-    limit_type: hard
-    limit_item: nofile
-    value: '1000000'
-
-- name: update nofile hard 1000
-  pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: soft
     limit_item: nofile
     value: '1000000'
-
-- name: update nofile hard 1000
-  pam_limits:
-    domain: '@1000'
-    limit_type: soft
-    limit_item: nofile
-    value: '1000000'    
-
 
 - name: update nproc soft
   pam_limits:
-    domain: '1000'
+    domain: '*'
     limit_type: hard
     limit_item: nproc
     value: '128000'
 
 - name: update nproc soft
   pam_limits:
-    domain: '@1000'
-    limit_type: hard
-    limit_item: nproc
-    value: '128000'
-
-- name: update nproc soft
-  pam_limits:
-    domain: '1000'
-    limit_type: soft
-    limit_item: nproc
-    value: '128000'
-
-- name: update nproc soft
-  pam_limits:
-    domain: '@1000'
+    domain: '*'
     limit_type: soft
     limit_item: nproc
     value: '128000'

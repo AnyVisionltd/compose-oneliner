@@ -267,5 +267,4 @@ case "${PRODUCT}" in
         exit 99
     ;;
     esac
-
 echo "Done, Please reboot before continuing."
