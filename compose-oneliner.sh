@@ -108,7 +108,7 @@ do
             else
                 echo "Not a valid driver version, aborting"
                 exit 1
-	        fi
+            fi
         ;;
     
         "-h"|"--help"|"help")
@@ -196,9 +196,8 @@ fi
 
 pushd ${DOCKER_COMPOSE_DIR}/${BRANCH}
 DOCKER_COMPOSE_FILE=`find . -type f -regextype posix-extended -regex './docker\-compose\-(local\-)?gpu\.yml'`
-if [[ PRODUCT=="insights" ]]; then
-    DOCKER_COMPOSE_PRODUCT_FILE=`find . -type f -regextype posix-extended -regex './docker\-compose\-insights\.yml'`
-    if [ $? -ne 0 ]; then
+if [[ "${PRODUCT}" == "insights" ]]; then
+    if ! DOCKER_COMPOSE_PRODUCT_FILE=`find . -type f -regextype posix-extended -regex './docker\-compose\-insights\.yml'` ; then
         echo "No such product $PRODUCT try again"
         exit 1
     fi
@@ -263,9 +262,9 @@ case "${PRODUCT}" in
         docker-compose -f ${DOCKER_COMPOSE_FILE} -f ${DOCKER_COMPOSE_PRODUCT_FILE} up -d
         exit
     ;;
+    *)
+        echo "No product selected"
+        exit 99
+    ;;
     esac
-else
-    echo "No product selected"
-    exit 99
-fi
 echo "Done, Please reboot before continuing."
