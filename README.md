@@ -6,4 +6,4 @@ wget -qO- <https://raw.githubusercontent.com/AnyVisionltd/compose-oneliner/devel
 
 To download compose-V2 use:
 
-wget -qO- <https://raw.githubusercontent.com/AnyVisionltd/compose-oneliner/development/compose-oneliner.sh> | bash -s -- -b development -k <GCR_TOKEN> -g compose-v2 --nvidia-driver-version 440[--help]
+wget -qO- <https://raw.githubusercontent.com/AnyVisionltd/compose-oneliner/development/compose-oneliner.sh> | bash -s -- -b development -k <GCR_TOKEN> -g compose-v2 --nvidia-driver-version 440 [--help]

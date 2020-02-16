@@ -19,7 +19,7 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 HOME_DIR=`eval echo ~$(logname)`
 COMPOSE_BASH_URL="https://github.com/AnyVisionltd"
-NVIDID-DRIVER-VERSION="410.104-1"
+NVIDIA_DRIVER_VERSION="410.104-1"
 
 
 function show_help(){
@@ -100,15 +100,16 @@ do
 
         "--nvidia-driver-version")
             if [[ "${args[((i+1))]}" == "410" ]]; then
-                NVIDID-DRIVER-VERSION="410.104-1"
+                NVIDIA_DRIVER_VERSION="410.104-1"
             elif [[ "${args[((i+1))]}" == "418" ]]; then
-                NVIDID-DRIVER-VERSION="418.87.01-1"
+                NVIDIA_DRIVER_VERSION="418.87.01-1"
             elif [[ "${args[((i+1))]}" == "440" ]]; then
-                NVIDID-DRIVER-VERSION="440.33.01-1 "
+                NVIDIA_DRIVER_VERSION="440.33.01-1 "
             else
                 echo "Not a valid driver version, aborting"
                 exit 1
-            ;;
+	        fi
+        ;;
     
         "-h"|"--help"|"help")
             show_help
@@ -225,7 +226,7 @@ git clone --recurse-submodules  https://github.com/AnyVisionltd/compose-oneliner
 pushd /opt/compose-oneliner
 
 
-if ! ansible-playbook --become --become-user=root ansible/main.yml -e nvidia_driver_package_version=${NVIDID-DRIVER-VERSION} -vvv; then
+if ! ansible-playbook --become --become-user=root ansible/main.yml -e nvidia_driver_package_version=${NVIDIA_DRIVER_VERSION} -vvv; then
     echo "" 
     echo "Installation failed, please contact support." 
     exit 1
