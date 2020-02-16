@@ -19,6 +19,7 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 HOME_DIR=`eval echo ~$(logname)`
 COMPOSE_BASH_URL="https://github.com/AnyVisionltd"
+NVIDID-DRIVER-VERSION="410.104-1"
 
 
 function show_help(){
@@ -33,6 +34,7 @@ function show_help(){
     echo "  [--download-dashboard] download dashboard"
     echo "  [--dashboard-version] download spcific dashboard version"
     echo "  [--download-only] preform download only without installing anything"
+    echo "  [--nvidia-driver-version] spicify the nvidia driver to install options [410|418|440]"
     echo "  [-h|--help|help] this help menu"
     echo ""
 }
@@ -95,6 +97,18 @@ do
         "--download-only")
             DOWNLOAD_ONLY="true"
         ;;
+
+        "--nvidia-driver-version")
+            if [[ "${args[((i+1))]}" == "410" ]]; then
+                NVIDID-DRIVER-VERSION="410.104-1"
+            elif [[ "${args[((i+1))]}" == "418" ]]; then
+                NVIDID-DRIVER-VERSION="418.87.01-1"
+            elif [[ "${args[((i+1))]}" == "440" ]]; then
+                NVIDID-DRIVER-VERSION="440.33.01-1 "
+            else
+                echo "Not a valid driver version, aborting"
+                exit 1
+            ;;
     
         "-h"|"--help"|"help")
             show_help
@@ -211,7 +225,7 @@ git clone --recurse-submodules  https://github.com/AnyVisionltd/compose-oneliner
 pushd /opt/compose-oneliner
 
 
-if ! ansible-playbook --become --become-user=root ansible/main.yml -vv; then
+if ! ansible-playbook --become --become-user=root ansible/main.yml -e nvidia_driver_package_version=${NVIDID-DRIVER-VERSION} -vvv; then
     echo "" 
     echo "Installation failed, please contact support." 
     exit 1
